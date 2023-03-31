@@ -15,7 +15,7 @@ class PepParsePipeline:
 
     def process_item(self, item, spider):
         """Метод подсчета кол-ва конкретных статусов."""
-        self.results[item["status"]] += 1
+        self.results[item["status"]] =  self.results.get(item["status"], 0) + 1
 
         return item
 
@@ -25,7 +25,10 @@ class PepParsePipeline:
 
         with open(file_dir, mode="w", encoding="utf-8") as file:
             file.write(f"{FIELDS_NAME[0]}, {FIELDS_NAME[1]}\n")
+            
             for key, value in self.results.items():
                 file.write(f"{key},{value}\n")
 
-            file.write(f"Total, {sum(self.results.values())}\n")
+            total = sum(self.results.values())
+
+            file.write(f"Total, {total}\n")
