@@ -1,3 +1,5 @@
+from urllib.parse import urljoin
+
 import scrapy
 
 from pep_parse.items import PepParseItem
@@ -14,7 +16,10 @@ class PepSpider(scrapy.Spider):
             href = pep.css("td a::attr(href)").get()
 
             if href is not None:
-                yield response.follow(href + "/", callback=self.parse_pep)
+                yield response.follow(
+                    urljoin(self.start_urls[0], href, "/"),
+                    callback=self.parse_pep
+                )
 
     def parse_pep(self, response):
         """Метод парсинга номера, названия и статуса со страницы PEP."""
